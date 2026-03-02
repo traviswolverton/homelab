@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>12U Network Rack Layout</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e14;
+    --panel: #111820;
+    --border: #1e3a4a;
+    --accent: #00c8ff;
+    --accent2: #00ff9d;
+    --text: #c8d8e8;
+    --text-dim: #4a6a7a;
+    --yellow: #ffd23f;
+    --black-ks: #4a9eff;
+    --white-ks: #e8e8e8;
+    --fiber: #a855f7;
+    --coax: #f97316;
+    --empty: #1a2530;
+    --u-height: 52px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px;
+    background-image: 
+      radial-gradient(ellipse at 20% 20%, rgba(0,200,255,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(0,255,157,0.03) 0%, transparent 60%);
+  }
+
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  h1 span {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 6px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .subtitle {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+
+  section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .section-title {
+    background: rgba(0,200,255,0.06);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: 'Share Tech Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--accent);
+  }
+
+  /* RACK */
+  .rack {
+    grid-column: 1;
+  }
+
+  .rack-frame {
+    padding: 12px;
+    background: #0d1520;
+  }
+
+  .rack-unit {
+    display: flex;
+    align-items: stretch;
+    height: var(--u-height);
+    margin-bottom: 3px;
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+    cursor: default;
+  }
+
+  .rack-unit:hover {
+    border-color: var(--accent);
+  }
+
+  .u-number {
+    width: 32px;
+    min-width: 32px;
+    background: #0a1018;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .u-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+  }
+
+  .u-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .u-label { flex: 1; }
+  .u-sub {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: 400;
+  }
+
+  .u-badge {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Unit colors */
+  .u-gateway { background: linear-gradient(90deg, rgba(0,200,255,0.12), rgba(0,200,255,0.04)); color: var(--accent); }
+  .u-switch { background: linear-gradient(90deg, rgba(0,255,157,0.1), rgba(0,255,157,0.03)); color: var(--accent2); }
+  .u-shelf { background: linear-gradient(90deg, rgba(255,180,50,0.08), rgba(255,180,50,0.02)); color: #ffb432; }
+  .u-patch { background: linear-gradient(90deg, rgba(168,85,247,0.1), rgba(168,85,247,0.03)); color: #c084fc; }
+  .u-nvr { background: linear-gradient(90deg, rgba(249,115,22,0.1), rgba(249,115,22,0.03)); color: #fb923c; }
+  .u-pdu { background: linear-gradient(90deg, rgba(100,100,120,0.1), rgba(100,100,120,0.03)); color: #94a3b8; }
+  .u-empty { background: #0d1218; color: var(--text-dim); }
+
+  .dac-line {
+    position: relative;
+  }
+
+  .dac-indicator {
+    font-size: 0.6rem;
+    color: var(--accent2);
+    font-family: 'Share Tech Mono', monospace;
+    background: rgba(0,255,157,0.1);
+    padding: 2px 5px;
+    border-radius: 2px;
+    border: 1px solid rgba(0,255,157,0.2);
+  }
+
+  /* PATCH PANEL */
+  .patch-section {
+    grid-column: 2;
+  }
+
+  .patch-grid {
+    padding: 16px;
+  }
+
+  .patch-row-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  .patch-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+
+  .port {
+    width: 26px;
+    height: 26px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.5rem;
+    border: 1px solid transparent;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .port:hover {
+    transform: scale(1.2);
+    z-index: 10;
+  }
+
+  .port-yellow { background: rgba(255,210,63,0.15); border-color: rgba(255,210,63,0.4); color: var(--yellow); }
+  .port-black { background: rgba(74,158,255,0.15); border-color: rgba(74,158,255,0.4); color: var(--black-ks); }
+  .port-white { background: rgba(232,232,232,0.1); border-color: rgba(232,232,232,0.3); color: var(--white-ks); }
+  .port-fiber { background: rgba(168,85,247,0.15); border-color: rgba(168,85,247,0.4); color: var(--fiber); }
+  .port-coax { background: rgba(249,115,22,0.15); border-color: rgba(249,115,22,0.4); color: var(--coax); }
+  .port-empty { background: var(--empty); border-color: #1a2530; color: var(--text-dim); }
+
+  .patch-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0 16px;
+  }
+
+  /* LEGEND */
+  .legend {
+    grid-column: 1 / -1;
+  }
+
+  .legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* CONNECTIONS */
+  .connections {
+    grid-column: 1 / -1;
+  }
+
+  .conn-list {
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .conn-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.82rem;
+    padding: 8px 10px;
+    background: rgba(0,200,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+  }
+
+  .conn-item .arrow {
+    color: var(--accent);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .conn-item .note {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    font-family: 'Share Tech Mono', monospace;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* COAX */
+  .coax-section {
+    grid-column: 1 / -1;
+  }
+
+  .coax-chain {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+  }
+
+  .coax-node {
+    background: rgba(249,115,22,0.1);
+    border: 1px solid rgba(249,115,22,0.3);
+    color: var(--coax);
+    padding: 6px 10px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .coax-arrow {
+    color: var(--text-dim);
+    font-size: 1rem;
+  }
+
+  .coax-split {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  footer {
+    margin-top: 30px;
+    text-align: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <h1>
+      <span>StarTech RK12OD</span>
+      12U Network Rack
+    </h1>
+    <div class="subtitle">
+      Network Equipment Only<br>
+      12U Open Frame · 19" · UniFi Core
+    </div>
+  </header>
+
+  <div class="grid">
+
+    <!-- RACK DIAGRAM -->
+    <section class="rack">
+      <div class="section-title">Rack Layout · U1–U12</div>
+      <div class="rack-frame">
+
+        <div class="rack-unit u-gateway">
+          <div class="u-number">U1</div>
+          <div class="u-content">
+            <div class="u-icon">🌐</div>
+            <div class="u-label">
+              UCG-Fiber Gateway
+              <div class="u-sub">3D mount · keystone panel side-by-side</div>
+            </div>
+            <span class="u-badge" style="background:rgba(0,200,255,0.15);color:var(--accent);border:1px solid rgba(0,200,255,0.3);">WAN</span>
+          </div>
+        </div>
+
+        <div class="rack-unit u-switch">
+          <div class="u-number">U2</div>
+          <div class="u-content">
+            <div class="u-icon">🔀</div>
+            <div class="u-label">
+              UniFi Pro Max 16 PoE
+              <div class="u-sub">3D mount · PSU brick on right</div>
+            </div>
+            <span class="dac-indicator">DAC↑</span>
+          </div>
+        </div>
+
+        <div class="rack-unit u-shelf">
+          <div class="u-number">U3</div>
+          <div class="u-content">
+            <div class="u-icon">📦</div>
+            <div class="u-label">
+              StarTech 1U Shelf
+              <div class="u-sub">RPi × 2 · HD Homerun Duo</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rack-unit u-patch">
+          <div class="u-number">U4</div>
+          <div class="u-content">
+            <div class="u-icon">🔌</div>
+            <div class="u-label">
+              2U Keystone Panel — Row 1
+              <div class="u-sub">Yellow · Black · White · Fiber</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rack-unit u-patch">
+          <div class="u-number">U5</div>
+          <div class="u-content">
+            <div class="u-icon">📡</div>
+            <div class="u-label">
+              2U Keystone Panel — Row 2
+              <div class="u-sub">Coax × 5 · Future expansion</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rack-unit u-nvr">
+          <div class="u-number">U6</div>
+          <div class="u-content">
+            <div class="u-icon">📹</div>
+            <div class="u-label">
+              Reolink RLN8-410 NVR
+              <div class="u-sub">3D mount w/ shelf · coax splitter velcro rear</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rack-unit u-pdu">
+          <div class="u-number">U7</div>
+          <div class="u-content">
+            <div class="u-icon">⚡</div>
+            <div class="u-label">
+              PDU — 1U 8-Outlet
+              <div class="u-sub">HHSOET · 1200J surge · 6ft cord</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rack-unit u-empty">
+          <div class="u-number">U8</div>
+          <div class="u-content"><div class="u-label" style="color:var(--text-dim);font-size:0.75rem;font-family:'Share Tech Mono',monospace;">— available —</div></div>
+        </div>
+        <div class="rack-unit u-empty">
+          <div class="u-number">U9</div>
+          <div class="u-content"><div class="u-label" style="color:var(--text-dim);font-size:0.75rem;font-family:'Share Tech Mono',monospace;">— available —</div></div>
+        </div>
+        <div class="rack-unit u-empty">
+          <div class="u-number">U10</div>
+          <div class="u-content"><div class="u-label" style="color:var(--text-dim);font-size:0.75rem;font-family:'Share Tech Mono',monospace;">— available —</div></div>
+        </div>
+        <div class="rack-unit u-empty">
+          <div class="u-number">U11</div>
+          <div class="u-content"><div class="u-label" style="color:var(--text-dim);font-size:0.75rem;font-family:'Share Tech Mono',monospace;">— available —</div></div>
+        </div>
+        <div class="rack-unit u-empty">
+          <div class="u-number">U12</div>
+          <div class="u-content"><div class="u-label" style="color:var(--text-dim);font-size:0.75rem;font-family:'Share Tech Mono',monospace;">— available —</div></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PATCH PANEL -->
+    <section class="patch-section">
+      <div class="section-title">Patch Panel · 2U 48-Port Keystone</div>
+      <div class="patch-grid">
+
+        <div class="patch-row-label">U4 — ROW 1 · Ports 1–24</div>
+        <div class="patch-row">
+          <!-- Yellow 1-6 -->
+          <div class="port port-yellow" title="Yellow #1 — ISP WAN">01</div>
+          <div class="port port-yellow" title="Yellow #2 — Cat5 Room Run">02</div>
+          <div class="port port-yellow" title="Yellow #3 — Cat5 Room Run">03</div>
+          <div class="port port-yellow" title="Yellow #4 — Cat5 Room Run">04</div>
+          <div class="port port-yellow" title="Yellow #5 — Cat5 Room Run">05</div>
+          <div class="port port-yellow" title="Yellow #6 — Cat5 Room Run">06</div>
+          <!-- Black 7-14 -->
+          <div class="port port-black" title="Black #1 — AP">07</div>
+          <div class="port port-black" title="Black #2 — AP">08</div>
+          <div class="port port-black" title="Black #3 — PoE Camera">09</div>
+          <div class="port port-black" title="Black #4 — PoE Camera">10</div>
+          <div class="port port-black" title="Black #5 — PoE spare">11</div>
+          <div class="port port-black" title="Black #6 — PoE spare">12</div>
+          <div class="port port-black" title="Black #7 — PoE spare">13</div>
+          <div class="port port-black" title="Black #8 — PoE spare">14</div>
+          <!-- White 15-18 -->
+          <div class="port port-white" title="White #1 — Client">15</div>
+          <div class="port port-white" title="White #2 — Client">16</div>
+          <div class="port port-white" title="White #3 — Client">17</div>
+          <div class="port port-white" title="White #4 — Client">18</div>
+          <!-- Fiber 19-20 -->
+          <div class="port port-fiber" title="Fiber #1 — Active">19</div>
+          <div class="port port-fiber" title="Fiber #2 — Reserved">20</div>
+          <!-- Empty 21-24 -->
+          <div class="port port-empty" title="Empty">21</div>
+          <div class="port port-empty" title="Empty">22</div>
+          <div class="port port-empty" title="Empty">23</div>
+          <div class="port port-empty" title="Empty">24</div>
+        </div>
+
+        <div class="patch-divider"></div>
+
+        <div class="patch-row-label">U5 — ROW 2 · Ports 1–24</div>
+        <div class="patch-row">
+          <!-- Coax 1-5 -->
+          <div class="port port-coax" title="Coax IN — Antenna">01</div>
+          <div class="port port-coax" title="Coax — HD Homerun">02</div>
+          <div class="port port-coax" title="Coax OUT — Room Run 1">03</div>
+          <div class="port port-coax" title="Coax OUT — Room Run 2">04</div>
+          <div class="port port-coax" title="Coax OUT — Room Run 3">05</div>
+          <!-- Empty 6-24 -->
+          <div class="port port-empty">06</div>
+          <div class="port port-empty">07</div>
+          <div class="port port-empty">08</div>
+          <div class="port port-empty">09</div>
+          <div class="port port-empty">10</div>
+          <div class="port port-empty">11</div>
+          <div class="port port-empty">12</div>
+          <div class="port port-empty">13</div>
+          <div class="port port-empty">14</div>
+          <div class="port port-empty">15</div>
+          <div class="port port-empty">16</div>
+          <div class="port port-empty">17</div>
+          <div class="port port-empty">18</div>
+          <div class="port port-empty">19</div>
+          <div class="port port-empty">20</div>
+          <div class="port port-empty">21</div>
+          <div class="port port-empty">22</div>
+          <div class="port port-empty">23</div>
+          <div class="port port-empty">24</div>
+        </div>
+
+        <!-- LEGEND -->
+        <div style="margin-top:8px;border-top:1px solid var(--border);padding-top:14px;">
+          <div class="patch-row-label" style="margin-bottom:10px;">Legend · hover ports for details</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <div class="legend-item"><div class="legend-dot" style="background:rgba(255,210,63,0.4);border:1px solid var(--yellow);"></div> Yellow — ISP/Cat5</div>
+            <div class="legend-item"><div class="legend-dot" style="background:rgba(74,158,255,0.4);border:1px solid var(--black-ks);"></div> Blue — Infrastructure/PoE</div>
+            <div class="legend-item"><div class="legend-dot" style="background:rgba(232,232,232,0.2);border:1px solid #888;"></div> White — Clients</div>
+            <div class="legend-item"><div class="legend-dot" style="background:rgba(168,85,247,0.4);border:1px solid var(--fiber);"></div> Purple — Fiber</div>
+            <div class="legend-item"><div class="legend-dot" style="background:rgba(249,115,22,0.4);border:1px solid var(--coax);"></div> Orange — Coax</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- COAX CHAIN -->
+    <section class="coax-section">
+      <div class="section-title">Coax Signal Chain</div>
+      <div class="coax-chain">
+        <div class="coax-node">📡 Antenna</div>
+        <div class="coax-arrow">→</div>
+        <div class="coax-node">Keystone IN<br><span style="color:var(--text-dim);font-size:0.65rem;">U5 Port 01</span></div>
+        <div class="coax-arrow">→</div>
+        <div class="coax-node">Splitter / Power Inserter<br><span style="color:var(--text-dim);font-size:0.65rem;">velcro rear · U6–7 area</span></div>
+        <div class="coax-arrow">→</div>
+        <div class="coax-split">
+          <div class="coax-node">HD Homerun Duo<br><span style="color:var(--text-dim);font-size:0.65rem;">U5 Port 02 → shelf U3</span></div>
+          <div class="coax-node">Room Run × 3<br><span style="color:var(--text-dim);font-size:0.65rem;">U5 Ports 03–05</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIRECT CONNECTIONS -->
+    <section class="connections">
+      <div class="section-title">Direct Connections · No Patch Panel</div>
+      <div class="conn-list">
+        <div class="conn-item">
+          <div class="arrow">DAC</div>
+          <div>UCG-Fiber → UniFi Pro Max 16<span class="note">U1 → U2 · direct SFP+ DAC cable · very short run</span></div>
+        </div>
+        <div class="conn-item">
+          <div class="arrow">6"</div>
+          <div>RPi #1 → Switch<span class="note">U3 shelf → U2 switch · 6" patch cable · PoE powered</span></div>
+        </div>
+        <div class="conn-item">
+          <div class="arrow">6"</div>
+          <div>RPi #2 → Switch<span class="note">U3 shelf → U2 switch · 6" patch cable · PoE powered</span></div>
+        </div>
+        <div class="conn-item">
+          <div class="arrow">6"</div>
+          <div>HD Homerun → Switch<span class="note">U3 shelf → U2 switch · 6" patch cable</span></div>
+        </div>
+        <div class="conn-item">
+          <div class="arrow">CAM</div>
+          <div>PoE Cameras → Reolink NVR<span class="note">physical camera runs · patch panel → NVR direct</span></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    StarTech RK12OD · 12U Open Frame · Network Equipment Rack &nbsp;·&nbsp; 5U available for future expansion
+  </footer>
+
+</div>
+</body>
+</html>
