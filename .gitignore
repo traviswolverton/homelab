@@ -1,0 +1,25 @@
+# Secrets — never commit these
+configs/.env
+*.env
+.env.*
+secrets/
+
+# Logs
+*.log
+logs/
+
+# State files
+*.state
+/var/lib/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+*~
+
+#VSCode Workspace
+*.code-workspace
