@@ -1,7 +1,6 @@
 # Secrets — never commit these
 configs/.env
 *.env
-.env.*
 secrets/
 
 # Logs
