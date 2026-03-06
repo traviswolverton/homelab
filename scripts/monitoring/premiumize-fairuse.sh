@@ -8,7 +8,7 @@ source /opt/homelab/configs/.env
 LOGFILE="/var/log/maintenance/premiumize-fairuse.log"
 STATE_FILE="/var/lib/maintenance/download-client-state"
 THRESHOLD_LOW=100
-THRESHOLD_HIGH=500
+THRESHOLD_HIGH=200
 
 mkdir -p "$(dirname "$LOGFILE")" "$(dirname "$STATE_FILE")"
 
@@ -29,7 +29,7 @@ SCORE=$(echo "$FAIRUSE_RESPONSE" | python3 -c "
 import sys, json
 data = json.load(sys.stdin)
 limit_used = float(data.get('limit_used', 0) or 0)
-print(int(limit_used * 1000))
+print(int((1 - limit_used) * 1000))
 " 2>/dev/null)
 
 if [ -z "$SCORE" ]; then
@@ -41,10 +41,10 @@ log "Fair use score: $SCORE | Current client: $CURRENT_CLIENT"
 
 NEW_CLIENT="$CURRENT_CLIENT"
 
-if [ "$CURRENT_CLIENT" = "rdtclient" ] && [ "$SCORE" -gt "$THRESHOLD_LOW" ]; then
+if [ "$CURRENT_CLIENT" = "rdtclient" ] && [ "$SCORE" -lt "$THRESHOLD_LOW" ]; then
     NEW_CLIENT="qbittorrent"
     log "Score $SCORE < $THRESHOLD_LOW — switching to qBittorrent"
-elif [ "$CURRENT_CLIENT" = "qbittorrent" ] && [ "$SCORE" -lt "$THRESHOLD_HIGH" ]; then
+elif [ "$CURRENT_CLIENT" = "qbittorrent" ] && [ "$SCORE" -gt "$THRESHOLD_HIGH" ]; then
     NEW_CLIENT="rdtclient"
     log "Score $SCORE > $THRESHOLD_HIGH — switching back to RDTClient"
 fi
