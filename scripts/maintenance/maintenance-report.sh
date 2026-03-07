@@ -100,6 +100,13 @@ last_line() { get_log "$1" | grep -i "$2" | tail -1; }
     fi
     echo ""
 
+        # --- Homarr ---
+    echo "HOMARR"
+    echo "------"
+    HOMARR=$(last_line "homarr-update.log" "Update OK\|FAILED")
+    [ -z "$HOMARR" ] && echo "  No status found" || echo "  $HOMARR" | sed 's/.*\] //'
+    echo ""
+
     # --- All Errors ---
     echo "ERRORS & WARNINGS"
     echo "-----------------"
