@@ -7,8 +7,8 @@ source /opt/homelab/configs/.env
 
 LOGFILE="/var/log/maintenance/premiumize-fairuse.log"
 STATE_FILE="/var/lib/maintenance/download-client-state"
-THRESHOLD_LOW=500    # score drops below this -> disable RDTClient
-THRESHOLD_HIGH=900   # score recovers above this -> re-enable RDTClient
+THRESHOLD_LOW=100    # score drops below this -> disable RDTClient
+THRESHOLD_HIGH=225   # score recovers above this -> re-enable RDTClient
 
 mkdir -p "$(dirname "$LOGFILE")" "$(dirname "$STATE_FILE")"
 
