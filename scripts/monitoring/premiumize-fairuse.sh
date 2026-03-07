@@ -7,8 +7,8 @@ source /opt/homelab/configs/.env
 
 LOGFILE="/var/log/maintenance/premiumize-fairuse.log"
 STATE_FILE="/var/lib/maintenance/download-client-state"
-THRESHOLD_LOW=100    # score drops below this -> disable RDTClient
-THRESHOLD_HIGH=225   # score recovers above this -> re-enable RDTClient
+THRESHOLD_LOW=500    # score drops below this -> disable RDTClient
+THRESHOLD_HIGH=900   # score recovers above this -> re-enable RDTClient
 
 mkdir -p "$(dirname "$LOGFILE")" "$(dirname "$STATE_FILE")"
 
@@ -53,8 +53,8 @@ if [ "$NEW_CLIENT" != "$CURRENT_CLIENT" ]; then
     # When switching to rdtclient: enable RDTClient
     # When switching to qbittorrent: disable RDTClient
     # qBittorrent is never touched — always enabled
-    RDT_ENABLED="true"
-    [ "$NEW_CLIENT" = "qbittorrent" ] && RDT_ENABLED="false"
+    RDT_ENABLED="false"
+    [ "$NEW_CLIENT" = "rdtclient" ] && RDT_ENABLED="true"
 
     for APP in "radarr|$PORT_RADARR|$API_RADARR|$IP_RADARR" "sonarr|$PORT_SONARR|$API_SONARR|$IP_SONARR" "sonarr2|$PORT_SONARR2|$API_SONARR2|$IP_SONARR2"; do
         IFS='|' read -r ANAME PORT AKEY AIP <<< "$APP"
@@ -67,7 +67,7 @@ for c in clients:
     if 'qbittorrent' in c['name'].lower():
         continue  # always enabled, never touch
     if 'rdt' in c['name'].lower() or 'realdebrid' in c['name'].lower():
-        c['enable'] = $RDT_ENABLED == 'true' if '$RDT_ENABLED' == 'true' else False
+        c['enable'] = $([ "$RDT_ENABLED" = "true" ] && echo 'True' || echo 'False')
         req = request.Request(
             'http://$AIP:$PORT/api/v3/downloadclient/' + str(c['id']),
             data=json.dumps(c).encode(),
