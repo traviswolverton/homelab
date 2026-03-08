@@ -32,7 +32,7 @@
           <mxGeometry height="60" width="175" x="1260" y="420" as="geometry" />
         </mxCell>
         <mxCell id="AyPLA1OjBl5jNCjSphVo-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#061018;strokeColor=#4a9eff;strokeWidth=2;fontColor=#7ab8ff;fontSize=11;fontStyle=0;verticalAlign=middle;align=center;" value="O - PS5 Slim&#xa;192.168.1.25" vertex="1">
-          <mxGeometry height="50" width="145" x="-130" y="570" as="geometry" />
+          <mxGeometry height="50" width="145" x="-190" y="620" as="geometry" />
         </mxCell>
         <mxCell id="AyPLA1OjBl5jNCjSphVo-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#061018;strokeColor=#4a9eff;strokeWidth=2;fontColor=#7ab8ff;fontSize=11;fontStyle=0;verticalAlign=middle;align=center;" value="O - Travis PC&#xa;192.168.1.10" vertex="1">
           <mxGeometry height="50" width="145" x="40" y="570" as="geometry" />
